@@ -1,31 +1,39 @@
-name: Deploy React App to GitHub Pages
+name: CI - Build & Test
 
 on:
   push:
-    branches:
-      - main
+  pull_request:
 
 jobs:
-  build-and-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
+          cache: npm
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build the app
+      - name: Build
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+      - name: Start app (background)
+        run: |
+          npm start
+
+      - name: Wait for server to be ready
+        run: |
+          # Attend jusqu'à 60s que l’un des ports courants réponde
+          npx -y wait-on -t 60000 http-get://127.0.0.1:3000
+
+      - name: Test with curl
+        run: |
+          echo "Hitting ${{ steps.pick.outputs.url }}"
+          curl -sS -D - "${{ steps.pick.outputs.url }}" -o /dev/null
