@@ -7,9 +7,6 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    container:
-      image: node:20
-      options: --user 0
 
     steps:
       - name: Checkout
@@ -27,23 +24,17 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Start app (background)
+      - name: Start app
         run: |
-          nohup npm start > app.log 2>&1 &
-          echo $! > app.pid
-
-      - name: Install curl
-        run: |
-          apt-get update
-          apt-get install -y curl
+          npx --yes serve -s build -l 3000 & echo $! > server.pid
 
       - name: Wait for server to be ready
         run: |
-          npx -y wait-on http://localhost:3000
+          npx --yes wait-on http://localhost:3000
 
-      - name: Test with curl
+      - name: Smoke test with curl
         run: |
-          run: curl -sSf http://localhost:3000
+          curl -I http://localhost:3000 | grep "200"
 
       - name: Show logs if failed
         if: failure()
