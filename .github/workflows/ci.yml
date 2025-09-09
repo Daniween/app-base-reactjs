@@ -29,6 +29,9 @@ jobs:
           nohup npm start > app.log 2>&1 &
           echo $! > app.pid
 
+      - name: Install curl
+        run: sudo apt-get update && sudo apt-get install -y curl
+
       - name: Wait for server to be ready
         run: |
           npx -y wait-on http://localhost:3000
