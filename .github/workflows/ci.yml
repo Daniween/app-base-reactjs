@@ -18,9 +18,6 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install and update
-        run: apt install && apt update
-
       - name: Install dependencies
         run: npm install
 
@@ -31,6 +28,11 @@ jobs:
         run: |
           nohup npm start > app.log 2>&1 &
           echo $! > app.pid
+
+      - name: Install curl
+        run: |
+          apt-get update
+          apt-get install -y curl
 
       - name: Wait for server to be ready
         run: |
