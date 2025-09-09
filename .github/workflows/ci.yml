@@ -31,10 +31,17 @@ jobs:
 
       - name: Wait for server to be ready
         run: |
-          # Attend jusqu'à 60s que l’un des ports courants réponde
-          npx -y wait-on -t 60000 http-get://127.0.0.1:3000
+          npx -y wait-on http://localhost:3000
 
       - name: Test with curl
         run: |
-          echo "Hitting ${{ steps.pick.outputs.url }}"
-          curl -sS -D - "${{ steps.pick.outputs.url }}" -o /dev/null
+          run: curl -sSf http://localhost:3000
+
+      - name: Show logs if failed
+        if: failure()
+        run: cat app.log
+
+      - name: Stop app
+        if: always()
+        run: |
+          kill $(cat app.pid) || true
