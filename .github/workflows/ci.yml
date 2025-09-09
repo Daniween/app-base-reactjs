@@ -32,7 +32,7 @@ jobs:
         run: |
           npx --yes wait-on http://localhost:3000
 
-      - name: Smoke test with curl
+      - name: Test with curl
         run: |
           curl -I http://localhost:3000 | grep "200"
 
