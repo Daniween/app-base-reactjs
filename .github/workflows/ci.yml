@@ -26,7 +26,7 @@ jobs:
 
       - name: Start app (background)
         run: |
-          npm start
+          nohup npm start
 
       - name: Wait for server to be ready
         run: |
