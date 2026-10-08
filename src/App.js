@@ -19,7 +19,7 @@ function App() {
         </a>
 
         <div>
-          Daniel S & Phenixel
+          Daniel S
         </div>
       </header>
     </div>
