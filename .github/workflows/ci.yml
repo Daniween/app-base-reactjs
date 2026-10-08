@@ -18,22 +18,17 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Check Node.js version
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Start app
         run: |
-          node -v
-          npm --version
-
-      # - name: Install dependencies
-      #   run: npm install
-
-      # - name: Build
-      #   run: npm run build
-
-      # - name: Start app
-      #   run: |
-      #     npm start &
-      #     echo $! > app.pid
-      #     echo "App started with PID $(cat app.pid)"
+          npm start &
+          echo $! > app.pid
+          echo "App started with PID $(cat app.pid)"
 
       # - name: Wait for server to be ready
       #   run: |
