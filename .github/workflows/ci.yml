@@ -30,13 +30,13 @@ jobs:
           echo $! > app.pid
           echo "App started with PID $(cat app.pid)"
 
-      # - name: Wait for server to be ready
-      #   run: |
-      #     npx --yes wait-on http://localhost:3000
+      - name: Wait for server to be ready
+        run: |
+          npx --yes wait-on http://localhost:3000
 
-      # - name: Test with curl
-      #   run: |
-      #     curl -I http://localhost:3000 | grep "200"
+      - name: Test with curl
+        run: |
+          curl -I http://localhost:3000 | grep "200"
 
       # - name: Show logs if failed
       #   if: failure()
