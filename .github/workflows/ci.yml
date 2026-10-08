@@ -28,6 +28,7 @@ jobs:
         run: |
           npm start &
           echo $! > app.pid
+          echo "App started with PID $(cat app.pid)"
 
       - name: Wait for server to be ready
         run: |
