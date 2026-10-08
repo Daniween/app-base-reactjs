@@ -38,11 +38,11 @@ jobs:
         run: |
           curl -I http://localhost:3000 | grep "200"
 
-      # - name: Show logs if failed
-      #   if: failure()
-      #   run: cat app.log
+      - name: Show logs if failed
+        if: failure()
+        run: cat app.log
 
-      # - name: Stop app
-      #   if: always()
-      #   run: |
-      #     kill $(cat app.pid) || true
+      - name: Stop app
+        if: always()
+        run: |
+          kill $(cat app.pid) || true
