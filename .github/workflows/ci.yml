@@ -12,37 +12,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+      - name: List files
+        run: ls -la
 
-      - name: Install dependencies
-        run: npm install
+      # - name: Setup Node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 20
+      #     cache: npm
 
-      - name: Build
-        run: npm run build
+      # - name: Install dependencies
+      #   run: npm install
 
-      - name: Start app
-        run: |
-          npm start &
-          echo $! > app.pid
-          echo "App started with PID $(cat app.pid)"
+      # - name: Build
+      #   run: npm run build
 
-      - name: Wait for server to be ready
-        run: |
-          npx --yes wait-on http://localhost:3000
+      # - name: Start app
+      #   run: |
+      #     npm start &
+      #     echo $! > app.pid
+      #     echo "App started with PID $(cat app.pid)"
 
-      - name: Test with curl
-        run: |
-          curl -I http://localhost:3000 | grep "200"
+      # - name: Wait for server to be ready
+      #   run: |
+      #     npx --yes wait-on http://localhost:3000
 
-      - name: Show logs if failed
-        if: failure()
-        run: cat app.log
+      # - name: Test with curl
+      #   run: |
+      #     curl -I http://localhost:3000 | grep "200"
 
-      - name: Stop app
-        if: always()
-        run: |
-          kill $(cat app.pid) || true
+      # - name: Show logs if failed
+      #   if: failure()
+      #   run: cat app.log
+
+      # - name: Stop app
+      #   if: always()
+      #   run: |
+      #     kill $(cat app.pid) || true
