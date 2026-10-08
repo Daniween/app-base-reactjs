@@ -26,7 +26,8 @@ jobs:
 
       - name: Start app
         run: |
-          npx --yes serve -s build -l 3000 & echo $! > server.pid
+          npm start &
+          echo $! > app.pid
 
       - name: Wait for server to be ready
         run: |
