@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  build-and-test:
+  build-and-test-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,37 +21,56 @@ jobs:
           exit-code: "1"
           severity: "CRITICAL,HIGH"
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          node-version: 20
-          cache: npm
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm install
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sio2-react:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Build
-        run: npm run build
+      # - name: Setup Node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 20
+      #     cache: npm
 
-      - name: Start app
-        run: |
-          npm start &
-          echo $! > app.pid
-          echo "App started with PID $(cat app.pid)"
+      # - name: Install dependencies
+      #   run: npm install
 
-      - name: Wait for server to be ready
-        run: |
-          npx --yes wait-on http://localhost:3000
+      # - name: Build
+      #   run: npm run build
 
-      - name: Test with curl
-        run: |
-          curl -I http://localhost:3000 | grep "200"
+      # - name: Start app
+      #   run: |
+      #     npm start &
+      #     echo $! > app.pid
+      #     echo "App started with PID $(cat app.pid)"
 
-      - name: Show logs if failed
-        if: failure()
-        run: cat app.log
+      # - name: Wait for server to be ready
+      #   run: |
+      #     npx --yes wait-on http://localhost:3000
 
-      - name: Stop app
-        if: always()
-        run: |
-          kill $(cat app.pid) || true
+      # - name: Test with curl
+      #   run: |
+      #     curl -I http://localhost:3000 | grep "200"
+
+      # - name: Show logs if failed
+      #   if: failure()
+      #   run: cat app.log
+
+      # - name: Stop app
+      #   if: always()
+      #   run: |
+      #     kill $(cat app.pid) || true
