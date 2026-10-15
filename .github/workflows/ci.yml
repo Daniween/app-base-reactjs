@@ -1,0 +1,43 @@
+
+name: CI React - Trivy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  trivy:
+    name: Analyse Trivy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuperer le projet
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Installer les dependances
+        run: npm ci
+
+      - name: Analyser les dependances avec Trivy
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'vuln'
+          vuln-type: 'library'
+          format: 'table'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+
+      - name: Compiler le projet React
+        run: npm run build

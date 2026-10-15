@@ -1,0 +1,8 @@
+node_modules/
+.git/
+.github/
+build/
+coverage/
+.env.local
+.env.*.local
+npm-debug.log*
