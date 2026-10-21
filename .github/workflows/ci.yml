@@ -1,76 +1,12 @@
-name: CI - Build & Test
-
+name: GH Install Build Test
 on:
   push:
-  pull_request:
+    branches: [cdwfs]
 
 jobs:
-  build-and-test-and-push:
+  build-test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # - name: Run Trivy vulnerability scanner
-      #   uses: aquasecurity/trivy-action@master
-      #   with:
-      #     scan-type: "fs"
-      #     scan-ref: "."
-      #     format: "table"
-      #     exit-code: "1"
-      #     severity: "CRITICAL,HIGH"
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sio2-react:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # - name: Setup Node
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: 20
-      #     cache: npm
-
-      # - name: Install dependencies
-      #   run: npm install
-
-      # - name: Build
-      #   run: npm run build
-
-      # - name: Start app
-      #   run: |
-      #     npm start &
-      #     echo $! > app.pid
-      #     echo "App started with PID $(cat app.pid)"
-
-      # - name: Wait for server to be ready
-      #   run: |
-      #     npx --yes wait-on http://localhost:3000
-
-      # - name: Test with curl
-      #   run: |
-      #     curl -I http://localhost:3000 | grep "200"
-
-      # - name: Show logs if failed
-      #   if: failure()
-      #   run: cat app.log
-
-      # - name: Stop app
-      #   if: always()
-      #   run: |
-      #     kill $(cat app.pid) || true
+      - uses: actions/checkout@v3
+      - name: Afficher
+        run: ls -la
